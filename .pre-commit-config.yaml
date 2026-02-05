@@ -1,0 +1,173 @@
+ci:
+  autoupdate_schedule: quarterly
+  skip:
+  - shfmt
+  - shellcheck
+  - hadolint
+
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: REDACTED  # frozen: v6.0.0
+  hooks:
+  # Git style
+  - id: check-added-large-files
+  - id: check-merge-conflict
+  - id: check-vcs-permalinks
+  - id: forbid-new-submodules
+  - id: no-commit-to-branch
+
+  # Common errors
+  - id: end-of-file-fixer
+  - id: trailing-whitespace
+    args: [--markdown-linebreak-ext=md]
+    exclude: CHANGELOG.md
+  - id: check-yaml
+  - id: check-merge-conflict
+  - id: check-executables-have-shebangs
+
+  # Cross platform
+  - id: check-case-conflict
+  - id: mixed-line-ending
+    args: [--fix=lf]
+
+  # Non-modifying checks:
+  - id: name-tests-test
+    files: >-
+      ^tests/[^_].*\.py$
+
+  # Security
+  - id: detect-aws-credentials
+    args:
+    - --allow-missing-credentials
+  - id: detect-private-key
+
+  # Detect hardcoded secrets
+- repo: https://github.com/gitleaks/gitleaks
+  rev: REDACTED  # frozen: v8.28.0
+  hooks:
+  - id: gitleaks
+
+# Github Action static analysis tool
+- repo: https://github.com/woodruffw/zizmor-pre-commit
+  rev: REDACTED  # frozen: v1.14.2
+  hooks:
+  - id: zizmor
+
+# Dockerfile
+- repo: https://github.com/hadolint/hadolint
+  rev: REDACTED  # frozen: v2.14.0
+  hooks:
+  - id: hadolint
+
+# YAML
+- repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+  rev: REDACTED  # frozen: 0.2.3
+  hooks:
+  - id: yamlfmt
+    args:
+    - --mapping=2
+    - --sequence=2
+    - --offset=0
+    - --width=75
+    - --implicit_start
+
+- repo: https://github.com/adrienverge/yamllint.git
+  rev: REDACTED  # frozen: v1.37.1
+  hooks:
+  - id: yamllint
+    types:
+    - file
+    - yaml
+    args:
+    - --strict
+
+# JSON5
+- repo: https://github.com/pre-commit/mirrors-prettier
+  rev: REDACTED  # frozen: v4.0.0-alpha.8
+  hooks:
+  - id: prettier
+    # https://prettier.io/docs/en/options.html#parser
+    files: .json5$
+
+# Bash
+- repo: https://github.com/jumanjihouse/pre-commit-hooks
+  rev: REDACTED  # frozen: 3.0.0
+  hooks:
+  - id: shfmt
+    args:
+    - -l
+    - -i
+    - '2'
+    - -ci
+    - -sr
+    - -w
+  - id: shellcheck
+
+# Python
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: REDACTED  # frozen: v0.13.3
+  hooks:
+  - id: ruff
+    args:
+    - --fix
+  - id: ruff-format
+
+- repo: https://github.com/wemake-services/wemake-python-styleguide
+  rev: REDACTED  # frozen: 1.4.0
+  hooks:
+  - id: wemake-python-styleguide
+
+- repo: https://github.com/pre-commit/mirrors-mypy.git
+  rev: REDACTED  # frozen: v1.18.2
+  hooks:
+  - id: mypy
+    alias: mypy-py314
+    name: MyPy, for Python 3.14
+    additional_dependencies:
+    - lxml  # dep of `--txt-report`, `--cobertura-xml-report` & `--html-report`
+    - pytest
+    - pytest-mock
+    args:
+    - --python-version=3.14
+    - --any-exprs-report=.tox/.tmp/.test-results/mypy--py-3.14
+    - --cobertura-xml-report=.tox/.tmp/.test-results/mypy--py-3.14
+    - --html-report=.tox/.tmp/.test-results/mypy--py-3.14
+    - --linecount-report=.tox/.tmp/.test-results/mypy--py-3.14
+    - --linecoverage-report=.tox/.tmp/.test-results/mypy--py-3.14
+    - --lineprecision-report=.tox/.tmp/.test-results/mypy--py-3.14
+    - --txt-report=.tox/.tmp/.test-results/mypy--py-3.14
+    pass_filenames: false
+  - id: mypy
+    alias: mypy-py312
+    name: MyPy, for Python 3.12
+    additional_dependencies:
+    - lxml  # dep of `--txt-report`, `--cobertura-xml-report` & `--html-report`
+    - pytest
+    - pytest-mock
+    args:
+    - --python-version=3.12
+    - --any-exprs-report=.tox/.tmp/.test-results/mypy--py-3.12
+    - --cobertura-xml-report=.tox/.tmp/.test-results/mypy--py-3.12
+    - --html-report=.tox/.tmp/.test-results/mypy--py-3.12
+    - --linecount-report=.tox/.tmp/.test-results/mypy--py-3.12
+    - --linecoverage-report=.tox/.tmp/.test-results/mypy--py-3.12
+    - --lineprecision-report=.tox/.tmp/.test-results/mypy--py-3.12
+    - --txt-report=.tox/.tmp/.test-results/mypy--py-3.12
+    pass_filenames: false
+  - id: mypy
+    alias: mypy-py310
+    name: MyPy, for Python 3.10
+    additional_dependencies:
+    - lxml  # dep of `--txt-report`, `--cobertura-xml-report` & `--html-report`
+    - pytest
+    - pytest-mock
+    args:
+    - --python-version=3.10
+    - --any-exprs-report=.tox/.tmp/.test-results/mypy--py-3.10
+    - --cobertura-xml-report=.tox/.tmp/.test-results/mypy--py-3.10
+    - --html-report=.tox/.tmp/.test-results/mypy--py-3.10
+    - --linecount-report=.tox/.tmp/.test-results/mypy--py-3.10
+    - --linecoverage-report=.tox/.tmp/.test-results/mypy--py-3.10
+    - --lineprecision-report=.tox/.tmp/.test-results/mypy--py-3.10
+    - --txt-report=.tox/.tmp/.test-results/mypy--py-3.10
+    pass_filenames: false
